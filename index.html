@@ -5,55 +5,28 @@
 #include "NUC1xx.h"
 #include "Driver\DrvUART.h"
 #include "Driver\DrvGPIO.h"
-
 #include "Driver\DrvSYS.h"
-
 #include "LCD_Driver.h"
 
+int main() {
+ char TEXT[16];
+ int a;
  
-
-int main()
-
-{
-
-char TEXT[16];
-
-int a;
-
+ UNLOCKREG();
+ SYSCLK->PWRCON.XTL12M_EN=1;
+ DrvSYS_Delay(5000);
+ SYSCLK->CLKSEL0.HCLK_S=0;
+ LOCKREG();
  
-
-UNLOCKREG();
-
-SYSCLK->PWRCON.XTL12M_EN=1;
-
-DrvSYS_Delay(5000); // Waiting for 12M Xtal stalble
-
-SYSCLK->CLKSEL0.HCLK_S=0;
-
-LOCKREG();
-
+ DrvGPIO_SetPortBits(E_GPA,15);
+ a=DrvGPIO_GetPortBits(E_GPA);
  
+ Initial_panel();
+ clr_all_panel();
 
-DrvGPIO_SetPortBits(E_GPA,15);
-
-a=DrvGPIO_GetPortBits(E_GPA);
-
- 
-
-Initial_panel();
-
-clr_all_panel();
-
- 
-
-//to print decimal: sprintf(TEXT,"port is %d",a);
-
-sprintf(TEXT,"port :: %x",a);
-
-print_lcd(0, TEXT);
-
+ sprintf(TEXT,"port :: %x",a);
+ print_lcd(0, TEXT);
 }
-
 
 </pre>
 </body>
